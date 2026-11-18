@@ -1,0 +1,911 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Digital Lost & Found</title>
+
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: Arial, sans-serif;
+        }
+
+        body {
+            background: #f4f7fb;
+            color: #222;
+        }
+
+        header {
+            background: linear-gradient(135deg, #4f46e5, #7c3aed);
+            color: white;
+            padding: 25px;
+            text-align: center;
+        }
+
+        header h1 {
+            margin-bottom: 8px;
+        }
+
+        nav {
+            background: white;
+            padding: 15px;
+            display: flex;
+            justify-content: center;
+            gap: 10px;
+            flex-wrap: wrap;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+        }
+
+        nav button {
+            border: none;
+            background: #4f46e5;
+            color: white;
+            padding: 10px 18px;
+            border-radius: 8px;
+            cursor: pointer;
+            font-weight: bold;
+        }
+
+        nav button:hover {
+            background: #3730a3;
+        }
+
+        .container {
+            width: 90%;
+            max-width: 1100px;
+            margin: 30px auto;
+        }
+
+        .hero {
+            background: white;
+            padding: 30px;
+            border-radius: 15px;
+            text-align: center;
+            margin-bottom: 25px;
+            box-shadow: 0 3px 12px rgba(0,0,0,0.08);
+        }
+
+        .hero h2 {
+            color: #4f46e5;
+            margin-bottom: 10px;
+        }
+
+        .stats {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 15px;
+            margin-bottom: 25px;
+        }
+
+        .stat {
+            background: white;
+            padding: 20px;
+            text-align: center;
+            border-radius: 12px;
+            box-shadow: 0 3px 10px rgba(0,0,0,0.07);
+        }
+
+        .stat h3 {
+            font-size: 30px;
+            color: #4f46e5;
+        }
+
+        .form-section {
+            background: white;
+            padding: 25px;
+            border-radius: 15px;
+            margin-bottom: 25px;
+            box-shadow: 0 3px 12px rgba(0,0,0,0.08);
+        }
+
+        .form-section h2 {
+            color: #4f46e5;
+            margin-bottom: 20px;
+        }
+
+        .form-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 15px;
+        }
+
+        .form-group {
+            display: flex;
+            flex-direction: column;
+        }
+
+        .form-group.full {
+            grid-column: 1 / -1;
+        }
+
+        label {
+            margin-bottom: 6px;
+            font-weight: bold;
+        }
+
+        input,
+        textarea,
+        select {
+            padding: 12px;
+            border: 1px solid #ccc;
+            border-radius: 8px;
+            outline: none;
+            font-size: 15px;
+        }
+
+        input:focus,
+        textarea:focus,
+        select:focus {
+            border-color: #4f46e5;
+        }
+
+        textarea {
+            min-height: 100px;
+            resize: vertical;
+        }
+
+        .submit-btn {
+            background: #4f46e5;
+            color: white;
+            border: none;
+            padding: 13px 25px;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 16px;
+            font-weight: bold;
+        }
+
+        .submit-btn:hover {
+            background: #3730a3;
+        }
+
+        .search-box {
+            background: white;
+            padding: 20px;
+            border-radius: 15px;
+            margin-bottom: 25px;
+            box-shadow: 0 3px 12px rgba(0,0,0,0.08);
+        }
+
+        .search-grid {
+            display: grid;
+            grid-template-columns: 2fr 1fr;
+            gap: 10px;
+        }
+
+        .items-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 20px;
+        }
+
+        .item-card {
+            background: white;
+            border-radius: 15px;
+            padding: 20px;
+            box-shadow: 0 3px 12px rgba(0,0,0,0.08);
+            transition: 0.3s;
+        }
+
+        .item-card:hover {
+            transform: translateY(-4px);
+        }
+
+        .badge {
+            display: inline-block;
+            padding: 5px 10px;
+            border-radius: 20px;
+            font-size: 12px;
+            font-weight: bold;
+            margin-bottom: 10px;
+        }
+
+        .lost {
+            background: #fee2e2;
+            color: #dc2626;
+        }
+
+        .found {
+            background: #dcfce7;
+            color: #16a34a;
+        }
+
+        .item-card h3 {
+            margin-bottom: 10px;
+            color: #333;
+        }
+
+        .item-info {
+            margin: 7px 0;
+            color: #555;
+            font-size: 14px;
+        }
+
+        .item-description {
+            margin-top: 10px;
+            color: #666;
+            line-height: 1.5;
+        }
+
+        .card-buttons {
+            display: flex;
+            gap: 8px;
+            margin-top: 15px;
+        }
+
+        .details-btn,
+        .delete-btn {
+            border: none;
+            padding: 9px 12px;
+            border-radius: 7px;
+            cursor: pointer;
+            color: white;
+        }
+
+        .details-btn {
+            background: #2563eb;
+        }
+
+        .delete-btn {
+            background: #dc2626;
+        }
+
+        .no-items {
+            background: white;
+            padding: 30px;
+            text-align: center;
+            border-radius: 15px;
+            color: #777;
+            grid-column: 1 / -1;
+        }
+
+        footer {
+            margin-top: 40px;
+            background: #111827;
+            color: white;
+            text-align: center;
+            padding: 25px;
+        }
+
+        .modal {
+            display: none;
+            position: fixed;
+            z-index: 1000;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0,0,0,0.6);
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+        }
+
+        .modal-content {
+            background: white;
+            width: 100%;
+            max-width: 550px;
+            border-radius: 15px;
+            padding: 25px;
+            position: relative;
+        }
+
+        .close {
+            position: absolute;
+            right: 20px;
+            top: 15px;
+            font-size: 25px;
+            cursor: pointer;
+            color: #555;
+        }
+
+        .modal-content h2 {
+            color: #4f46e5;
+            margin-bottom: 15px;
+        }
+
+        @media (max-width: 800px) {
+            .items-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+
+            .stats {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        @media (max-width: 600px) {
+            .form-grid,
+            .search-grid,
+            .items-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .container {
+                width: 95%;
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+<header>
+    <h1>🔎 Digital Lost & Found</h1>
+    <p>Helping people find their lost belongings</p>
+</header>
+
+<nav>
+    <button onclick="scrollToSection('report')">Report Item</button>
+    <button onclick="scrollToSection('items')">View Items</button>
+    <button onclick="scrollToSection('search')">Search</button>
+</nav>
+
+<div class="container">
+
+    <section class="hero">
+        <h2>Welcome to Digital Lost & Found</h2>
+        <p>
+            Report lost or found belongings and help reunite people
+            with their valuable items.
+        </p>
+    </section>
+
+    <section class="stats">
+        <div class="stat">
+            <h3 id="totalCount">0</h3>
+            <p>Total Reports</p>
+        </div>
+
+        <div class="stat">
+            <h3 id="lostCount">0</h3>
+            <p>Lost Items</p>
+        </div>
+
+        <div class="stat">
+            <h3 id="foundCount">0</h3>
+            <p>Found Items</p>
+        </div>
+    </section>
+
+    <!-- REPORT FORM -->
+    <section class="form-section" id="report">
+        <h2>📋 Report Lost / Found Item</h2>
+
+        <form id="itemForm">
+
+            <div class="form-grid">
+
+                <div class="form-group">
+                    <label>Report Type</label>
+
+                    <select id="type" required>
+                        <option value="">Select Type</option>
+                        <option value="Lost">Lost Item</option>
+                        <option value="Found">Found Item</option>
+                    </select>
+                </div>
+
+                <div class="form-group">
+                    <label>Item Name</label>
+                    <input
+                        type="text"
+                        id="itemName"
+                        placeholder="Example: Black Wallet"
+                        required
+                    >
+                </div>
+
+                <div class="form-group">
+                    <label>Category</label>
+
+                    <select id="category" required>
+                        <option value="">Select Category</option>
+                        <option>Electronics</option>
+                        <option>Documents</option>
+                        <option>Wallet</option>
+                        <option>Keys</option>
+                        <option>Bag</option>
+                        <option>Jewellery</option>
+                        <option>Clothing</option>
+                        <option>Other</option>
+                    </select>
+                </div>
+
+                <div class="form-group">
+                    <label>Location</label>
+                    <input
+                        type="text"
+                        id="location"
+                        placeholder="Example: College Library"
+                        required
+                    >
+                </div>
+
+                <div class="form-group">
+                    <label>Date</label>
+                    <input
+                        type="date"
+                        id="date"
+                        required
+                    >
+                </div>
+
+                <div class="form-group">
+                    <label>Contact Number</label>
+                    <input
+                        type="tel"
+                        id="contact"
+                        placeholder="Example: 9876543210"
+                        required
+                    >
+                </div>
+
+                <div class="form-group full">
+                    <label>Description</label>
+
+                    <textarea
+                        id="description"
+                        placeholder="Describe the item..."
+                        required
+                    ></textarea>
+                </div>
+
+                <div class="form-group full">
+                    <button class="submit-btn" type="submit">
+                        ➕ Submit Report
+                    </button>
+                </div>
+
+            </div>
+
+        </form>
+    </section>
+
+    <!-- SEARCH -->
+    <section class="search-box" id="search">
+
+        <h2>🔍 Search Items</h2>
+
+        <br>
+
+        <div class="search-grid">
+
+            <input
+                type="text"
+                id="searchInput"
+                placeholder="Search by item, category, location..."
+                oninput="displayItems()"
+            >
+
+            <select id="filterType" onchange="displayItems()">
+                <option value="All">All Items</option>
+                <option value="Lost">Lost Items</option>
+                <option value="Found">Found Items</option>
+            </select>
+
+        </div>
+
+    </section>
+
+    <!-- ITEMS -->
+    <section id="items">
+
+        <h2 style="margin-bottom:20px;">
+            📦 Reported Items
+        </h2>
+
+        <div class="items-grid" id="itemsContainer">
+        </div>
+
+    </section>
+
+</div>
+
+<footer>
+    <p>© 2026 Digital Lost & Found System</p>
+    <p>Developed using HTML, CSS & JavaScript</p>
+</footer>
+
+
+<!-- MODAL -->
+
+<div class="modal" id="detailsModal">
+
+    <div class="modal-content">
+
+        <span class="close" onclick="closeModal()">&times;</span>
+
+        <h2>Item Details</h2>
+
+        <div id="modalBody"></div>
+
+    </div>
+
+</div>
+
+
+<script>
+
+    // Get existing items from Local Storage
+    let items = JSON.parse(localStorage.getItem("lostFoundItems")) || [];
+
+
+    // Form submit
+    document.getElementById("itemForm").addEventListener("submit", function(event) {
+
+        event.preventDefault();
+
+        const type = document.getElementById("type").value;
+        const itemName = document.getElementById("itemName").value;
+        const category = document.getElementById("category").value;
+        const location = document.getElementById("location").value;
+        const date = document.getElementById("date").value;
+        const contact = document.getElementById("contact").value;
+        const description = document.getElementById("description").value;
+
+        const newItem = {
+
+            id: Date.now(),
+
+            type: type,
+
+            itemName: itemName,
+
+            category: category,
+
+            location: location,
+
+            date: date,
+
+            contact: contact,
+
+            description: description
+
+        };
+
+        items.push(newItem);
+
+        localStorage.setItem(
+            "lostFoundItems",
+            JSON.stringify(items)
+        );
+
+        alert("✅ Item report submitted successfully!");
+
+        document.getElementById("itemForm").reset();
+
+        displayItems();
+
+        scrollToSection("items");
+
+    });
+
+
+    // Display items
+    function displayItems() {
+
+        const container =
+            document.getElementById("itemsContainer");
+
+        const search =
+            document.getElementById("searchInput")
+            .value
+            .toLowerCase();
+
+        const filter =
+            document.getElementById("filterType")
+            .value;
+
+
+        let filteredItems = items.filter(function(item) {
+
+            const matchesSearch =
+                item.itemName.toLowerCase().includes(search) ||
+                item.category.toLowerCase().includes(search) ||
+                item.location.toLowerCase().includes(search) ||
+                item.description.toLowerCase().includes(search);
+
+            const matchesFilter =
+                filter === "All" ||
+                item.type === filter;
+
+            return matchesSearch && matchesFilter;
+
+        });
+
+
+        container.innerHTML = "";
+
+
+        if (filteredItems.length === 0) {
+
+            container.innerHTML = `
+                <div class="no-items">
+                    <h3>😕 No items found</h3>
+                    <p>Try another search or report a new item.</p>
+                </div>
+            `;
+
+            updateStats();
+
+            return;
+        }
+
+
+        filteredItems.reverse().forEach(function(item) {
+
+            const card = document.createElement("div");
+
+            card.className = "item-card";
+
+
+            card.innerHTML = `
+
+                <span class="badge ${
+                    item.type === "Lost"
+                    ? "lost"
+                    : "found"
+                }">
+
+                    ${
+                        item.type === "Lost"
+                        ? "🔴 LOST"
+                        : "🟢 FOUND"
+                    }
+
+                </span>
+
+
+                <h3>${escapeHTML(item.itemName)}</h3>
+
+
+                <div class="item-info">
+                    📂 <strong>Category:</strong>
+                    ${escapeHTML(item.category)}
+                </div>
+
+
+                <div class="item-info">
+                    📍 <strong>Location:</strong>
+                    ${escapeHTML(item.location)}
+                </div>
+
+
+                <div class="item-info">
+                    📅 <strong>Date:</strong>
+                    ${escapeHTML(item.date)}
+                </div>
+
+
+                <p class="item-description">
+                    ${escapeHTML(item.description)}
+                </p>
+
+
+                <div class="card-buttons">
+
+                    <button
+                        class="details-btn"
+                        onclick="showDetails(${item.id})">
+                        View Details
+                    </button>
+
+                    <button
+                        class="delete-btn"
+                        onclick="deleteItem(${item.id})">
+                        Delete
+                    </button>
+
+                </div>
+
+            `;
+
+
+            container.appendChild(card);
+
+        });
+
+
+        updateStats();
+
+    }
+
+
+    // Show item details
+    function showDetails(id) {
+
+        const item = items.find(
+            item => item.id === id
+        );
+
+        if (!item) return;
+
+
+        const modal =
+            document.getElementById("detailsModal");
+
+        const body =
+            document.getElementById("modalBody");
+
+
+        body.innerHTML = `
+
+            <p>
+                <strong>Type:</strong>
+                ${escapeHTML(item.type)}
+            </p>
+
+            <br>
+
+            <p>
+                <strong>Item:</strong>
+                ${escapeHTML(item.itemName)}
+            </p>
+
+            <br>
+
+            <p>
+                <strong>Category:</strong>
+                ${escapeHTML(item.category)}
+            </p>
+
+            <br>
+
+            <p>
+                <strong>Location:</strong>
+                ${escapeHTML(item.location)}
+            </p>
+
+            <br>
+
+            <p>
+                <strong>Date:</strong>
+                ${escapeHTML(item.date)}
+            </p>
+
+            <br>
+
+            <p>
+                <strong>Contact:</strong>
+                ${escapeHTML(item.contact)}
+            </p>
+
+            <br>
+
+            <p>
+                <strong>Description:</strong>
+                ${escapeHTML(item.description)}
+            </p>
+
+        `;
+
+
+        modal.style.display = "flex";
+
+    }
+
+
+    // Close modal
+    function closeModal() {
+
+        document.getElementById(
+            "detailsModal"
+        ).style.display = "none";
+
+    }
+
+
+    // Delete item
+    function deleteItem(id) {
+
+        const confirmation =
+            confirm(
+                "Are you sure you want to delete this report?"
+            );
+
+
+        if (!confirmation) return;
+
+
+        items = items.filter(
+            item => item.id !== id
+        );
+
+
+        localStorage.setItem(
+            "lostFoundItems",
+            JSON.stringify(items)
+        );
+
+
+        displayItems();
+
+        alert("🗑️ Report deleted.");
+
+    }
+
+
+    // Update statistics
+    function updateStats() {
+
+        const total =
+            items.length;
+
+        const lost =
+            items.filter(
+                item => item.type === "Lost"
+            ).length;
+
+        const found =
+            items.filter(
+                item => item.type === "Found"
+            ).length;
+
+
+        document.getElementById(
+            "totalCount"
+        ).textContent = total;
+
+
+        document.getElementById(
+            "lostCount"
+        ).textContent = lost;
+
+
+        document.getElementById(
+            "foundCount"
+        ).textContent = found;
+
+    }
+
+
+    // Smooth scrolling
+    function scrollToSection(id) {
+
+        document.getElementById(id)
+            .scrollIntoView({
+                behavior: "smooth"
+            });
+
+    }
+
+
+    // Prevent HTML injection
+    function escapeHTML(text) {
+
+        const div =
+            document.createElement("div");
+
+        div.textContent = text;
+
+        return div.innerHTML;
+
+    }
+
+
+    // Close modal when clicking outside
+    window.addEventListener("click", function(event) {
+
+        const modal =
+            document.getElementById("detailsModal");
+
+        if (event.target === modal) {
+
+            closeModal();
+
+        }
+
+    });
+
+
+    // Initial display
+    displayItems();
+
+</script>
+
+</body>
+</html>
